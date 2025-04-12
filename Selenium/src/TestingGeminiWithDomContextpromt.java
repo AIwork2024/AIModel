@@ -9,14 +9,13 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TestingGeminiWithDomContextpromt {
 
-    private static final String GEMINI_API_KEY = "AIzaSyCv6Ap6Jfg55ucjtZ2TATmVFFA7VL8LOjo"; // Replace with your real key
-    private static final String SOURCE_FILE_PATH = "C:\\Users\\Kishore\\IdeaProjects\\Selenium\\src\\TestingGeminiWithDomContext.java";
+    private static final String GEMINI_API_KEY = "AIzaSyCY-q0TEdcdoGyP3BtHA1y3jDEtnSZascE"; // Replace with your real key
+    private static final String SOURCE_FILE_PATH = "D:\\MyAICode\\AIModel\\Selenium\\src\\TestingGeminiWithDomContextpromt.java";
 
     static OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -35,8 +34,7 @@ public class TestingGeminiWithDomContextpromt {
         String elementDescription = "Trying to locate the 'Username' text field on the homepage.";
 
         // [AUTO-UPDATE-XPATH] -- DO NOT REMOVE THIS COMMENT
-        By originalLocator = By.xpath("//*[@name='login-button7']"); // Original fallback locator
-
+By originalLocator = By.xpath("//*[@data-test='username4544']"); // [AUTO-UPDATE-XPATH]
         WebElement element = null;
         try {
             element = driver.findElement(originalLocator);
@@ -156,20 +154,17 @@ public class TestingGeminiWithDomContextpromt {
                 return;
             }
 
-            String source = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-            String[] lines = source.split("\n");
+            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
             String marker = "// [AUTO-UPDATE-XPATH]";
-            String updatedLine = "By originalLocator = By.xpath(\"" + newXPath.replace("\"", "\\\"") + "\"); // [AUTO-UPDATE-XPATH]";
-
             boolean replaced = false;
-            StringBuilder updatedSource = new StringBuilder();
 
-            for (String line : lines) {
-                if (line.contains("By originalLocator =")) {
-                    updatedSource.append(updatedLine).append("\n");
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i).trim();
+                if (line.contains("By originalLocator") && line.contains(marker)) {
+                    String updatedLine = "By originalLocator = By.xpath(\"" + newXPath + "\"); " + marker;
+                    lines.set(i, updatedLine);
                     replaced = true;
-                } else {
-                    updatedSource.append(line).append("\n");
+                    break;
                 }
             }
 
@@ -177,16 +172,38 @@ public class TestingGeminiWithDomContextpromt {
                 System.out.println("⚠️ Could not find the marker line to update.");
                 return;
             }
-            System.out.println("➡️ Writing to file: " + filePath);
-            Files.writeString(path, updatedSource.toString());
+
+            Files.write(path, lines, StandardCharsets.UTF_8);
             System.out.println("✅ XPath updated in source file.");
 
-            String verify = Files.readString(path);
+            String verify = Files.readString(path, StandardCharsets.UTF_8);
             System.out.println("🔍 File content after update:");
             System.out.println(verify);
+            // Calling the shell script after updating the file
+            callShellScript("D:\\MyAICode\\AIModel\\Selenium\\src\\auto_commit_and_pr.sh");
 
         } catch (IOException e) {
             System.out.println("❌ Failed to update source file: " + e.getMessage());
+        }
+    }
+
+    public static void callShellScript(String scriptPath) {
+        try {
+            String bashPath = "C:\\Program Files\\Git\\bin\\bash.exe"; // Git Bash path
+
+            ProcessBuilder processBuilder = new ProcessBuilder(bashPath, scriptPath);
+            processBuilder.inheritIO();
+
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                System.out.println("✅ Shell script executed successfully.");
+            } else {
+                System.out.println("❌ Shell script failed with exit code: " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("❌ Failed to call shell script: " + e.getMessage());
         }
     }
 
