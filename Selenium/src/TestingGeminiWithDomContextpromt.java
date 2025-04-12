@@ -34,7 +34,7 @@ public class TestingGeminiWithDomContextpromt {
         String elementDescription = "Trying to locate the 'Username' text field on the homepage.";
 
         // [AUTO-UPDATE-XPATH] -- DO NOT REMOVE THIS COMMENT
-By originalLocator = By.xpath("//input[@data-test='username4554']"); // [AUTO-UPDATE-XPATH]
+By originalLocator = By.xpath("//*[@data-test='username']"); // [AUTO-UPDATE-XPATH]
         WebElement element = null;
         try {
             element = driver.findElement(originalLocator);
@@ -189,23 +189,22 @@ By originalLocator = By.xpath("//input[@data-test='username4554']"); // [AUTO-UP
 
     public static void callShellScript(String scriptPath) {
         try {
-            // Initialize ProcessBuilder to execute the shell script
-            ProcessBuilder processBuilder = new ProcessBuilder("bash", scriptPath);
+            String bashPath = "C:\\Program Files\\Git\\bin\\bash.exe"; // Git Bash path
 
-            // Optionally, you can redirect the output to a log file or console
-            processBuilder.inheritIO(); // This will make the shell script output visible in the console
+            ProcessBuilder processBuilder = new ProcessBuilder(bashPath, scriptPath);
+            processBuilder.inheritIO();
 
-            // Start the process and wait for it to finish
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
 
             if (exitCode == 0) {
                 System.out.println("✅ Shell script executed successfully.");
             } else {
-                System.out.println("❌ Shell script execution failed with exit code: " + exitCode);
+                System.out.println("❌ Shell script failed with exit code: " + exitCode);
             }
         } catch (IOException | InterruptedException e) {
             System.out.println("❌ Failed to call shell script: " + e.getMessage());
         }
     }
+
 }
