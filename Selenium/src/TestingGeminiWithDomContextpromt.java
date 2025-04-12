@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class TestingGeminiWithDomContextpromt {
 
     private static final String GEMINI_API_KEY = "AIzaSyCv6Ap6Jfg55ucjtZ2TATmVFFA7VL8LOjo"; // Replace with your real key
-    private static final String SOURCE_FILE_PATH = "C:\\Users\\Kishore\\IdeaProjects\\Selenium\\src\\TestingGeminiWithDomContext.java";
+    private static final String SOURCE_FILE_PATH = "D:\\MyAICode\\AIModel\\Selenium\\src\\TestingGeminiWithDomContext.java";
 
     static OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
