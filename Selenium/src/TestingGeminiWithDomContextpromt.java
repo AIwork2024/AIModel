@@ -34,7 +34,7 @@ public class TestingGeminiWithDomContextpromt {
         String elementDescription = "Trying to locate the 'Username' text field on the homepage.";
 
         // [AUTO-UPDATE-XPATH] -- DO NOT REMOVE THIS COMMENT
-By originalLocator = By.xpath("//*[@data-test='username4544']"); // [AUTO-UPDATE-XPATH]
+By originalLocator = By.xpath("//*[@data-test='username']"); // [AUTO-UPDATE-XPATH]
         WebElement element = null;
         try {
             element = driver.findElement(originalLocator);
