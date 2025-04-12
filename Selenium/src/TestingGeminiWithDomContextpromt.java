@@ -9,13 +9,12 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TestingGeminiWithDomContextpromt {
 
-    private static final String GEMINI_API_KEY = "AIzaSyCv6Ap6Jfg55ucjtZ2TATmVFFA7VL8LOjo"; // Replace with your real key
+    private static final String GEMINI_API_KEY = "AIzaSyCY-q0TEdcdoGyP3BtHA1y3jDEtnSZascE"; // Replace with your real key
     private static final String SOURCE_FILE_PATH = "D:\\MyAICode\\AIModel\\Selenium\\src\\TestingGeminiWithDomContextpromt.java";
 
     static OkHttpClient client = new OkHttpClient.Builder()
@@ -35,7 +34,7 @@ public class TestingGeminiWithDomContextpromt {
         String elementDescription = "Trying to locate the 'Username' text field on the homepage.";
 
         // [AUTO-UPDATE-XPATH] -- DO NOT REMOVE THIS COMMENT
-By originalLocator = By.xpath("//input[@data-test='username4544']"); // [AUTO-UPDATE-XPATH]
+By originalLocator = By.xpath("//*[@data-test='username']"); // [AUTO-UPDATE-XPATH]
 
         WebElement element = null;
         try {
@@ -156,20 +155,17 @@ By originalLocator = By.xpath("//input[@data-test='username4544']"); // [AUTO-UP
                 return;
             }
 
-            String source = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-            String[] lines = source.split("\n");
+            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
             String marker = "// [AUTO-UPDATE-XPATH]";
-By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE-XPATH]
-
             boolean replaced = false;
-            StringBuilder updatedSource = new StringBuilder();
 
-            for (String line : lines) {
-By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE-XPATH]
-                    updatedSource.append(updatedLine).append("\n");
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i).trim();
+                if (line.contains("By originalLocator") && line.contains(marker)) {
+                    String updatedLine = "By originalLocator = By.xpath(\"" + newXPath + "\"); " + marker;
+                    lines.set(i, updatedLine);
                     replaced = true;
-                } else {
-                    updatedSource.append(line).append("\n");
+                    break;
                 }
             }
 
@@ -177,11 +173,11 @@ By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE
                 System.out.println("⚠️ Could not find the marker line to update.");
                 return;
             }
-            System.out.println("➡️ Writing to file: " + filePath);
-            Files.writeString(path, updatedSource.toString());
+
+            Files.write(path, lines, StandardCharsets.UTF_8);
             System.out.println("✅ XPath updated in source file.");
 
-            String verify = Files.readString(path);
+            String verify = Files.readString(path, StandardCharsets.UTF_8);
             System.out.println("🔍 File content after update:");
             System.out.println(verify);
 
@@ -189,5 +185,4 @@ By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE
             System.out.println("❌ Failed to update source file: " + e.getMessage());
         }
     }
-
 }
