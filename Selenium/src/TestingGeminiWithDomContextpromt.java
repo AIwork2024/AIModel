@@ -34,8 +34,7 @@ public class TestingGeminiWithDomContextpromt {
         String elementDescription = "Trying to locate the 'Username' text field on the homepage.";
 
         // [AUTO-UPDATE-XPATH] -- DO NOT REMOVE THIS COMMENT
-By originalLocator = By.xpath("//*[@data-test='username455']"); // [AUTO-UPDATE-XPATH]
-
+By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE-XPATH]
         WebElement element = null;
         try {
             element = driver.findElement(originalLocator);
@@ -180,9 +179,33 @@ By originalLocator = By.xpath("//*[@data-test='username455']"); // [AUTO-UPDATE-
             String verify = Files.readString(path, StandardCharsets.UTF_8);
             System.out.println("🔍 File content after update:");
             System.out.println(verify);
+            // Calling the shell script after updating the file
+            callShellScript("D:\\MyAICode\\AIModel\\Selenium\\src\\auto_commit_and_pr.sh");
 
         } catch (IOException e) {
             System.out.println("❌ Failed to update source file: " + e.getMessage());
+        }
+    }
+
+    public static void callShellScript(String scriptPath) {
+        try {
+            // Initialize ProcessBuilder to execute the shell script
+            ProcessBuilder processBuilder = new ProcessBuilder("bash", scriptPath);
+
+            // Optionally, you can redirect the output to a log file or console
+            processBuilder.inheritIO(); // This will make the shell script output visible in the console
+
+            // Start the process and wait for it to finish
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                System.out.println("✅ Shell script executed successfully.");
+            } else {
+                System.out.println("❌ Shell script execution failed with exit code: " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("❌ Failed to call shell script: " + e.getMessage());
         }
     }
 }
