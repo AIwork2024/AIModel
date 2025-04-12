@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class TestingGeminiWithDomContextpromt {
 
     private static final String GEMINI_API_KEY = "AIzaSyCv6Ap6Jfg55ucjtZ2TATmVFFA7VL8LOjo"; // Replace with your real key
-    private static final String SOURCE_FILE_PATH = "D:\\MyAICode\\AIModel\\Selenium\\src\\TestingGeminiWithDomContextpromt .java";
+    private static final String SOURCE_FILE_PATH = "D:\\MyAICode\\AIModel\\Selenium\\src\\TestingGeminiWithDomContextpromt.java";
 
     static OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -35,7 +35,7 @@ public class TestingGeminiWithDomContextpromt {
         String elementDescription = "Trying to locate the 'Username' text field on the homepage.";
 
         // [AUTO-UPDATE-XPATH] -- DO NOT REMOVE THIS COMMENT
-        By originalLocator = By.xpath("//*[@name='login-button7']"); // Original fallback locator
+By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE-XPATH]
 
         WebElement element = null;
         try {
@@ -159,13 +159,13 @@ public class TestingGeminiWithDomContextpromt {
             String source = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             String[] lines = source.split("\n");
             String marker = "// [AUTO-UPDATE-XPATH]";
-            String updatedLine = "By originalLocator = By.xpath(\"" + newXPath.replace("\"", "\\\"") + "\"); // [AUTO-UPDATE-XPATH]";
+By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE-XPATH]
 
             boolean replaced = false;
             StringBuilder updatedSource = new StringBuilder();
 
             for (String line : lines) {
-                if (line.contains("By originalLocator =")) {
+By originalLocator = By.xpath("//input[@data-test='username']"); // [AUTO-UPDATE-XPATH]
                     updatedSource.append(updatedLine).append("\n");
                     replaced = true;
                 } else {
